@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'pages/loading_page.dart';
 
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Firebase 3-5',
+      title: 'Flutter Firebase 3-5',
       home: LoadingPage(),
     );
   }
