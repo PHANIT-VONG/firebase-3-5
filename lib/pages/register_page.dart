@@ -20,75 +20,89 @@ class _RegisterPageState extends State<RegisterPage> {
   final _lastName = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
-  String _errorMessage = '';
 
-  Future<void> _register() async {
+  _buildShowTost(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
+  Future<void> _register(String email, String password) async {
+    String message = '';
     try {
       await _auth
-          .createUserWithEmailAndPassword(
-              email: _email.text, password: _password.text)
+          .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
         _postUserToFirestore();
       }).catchError((e) {
-        Fluttertoast.showToast(
-          msg: e!.message,
-          backgroundColor: Colors.red,
-        );
+        message = e.message;
       });
-    } on FirebaseAuthException catch (error) {
-      switch (error.code) {
-        case "invalid-email":
-          _errorMessage = "Your email address appears to be malformed.";
-          break;
-        case "wrong-password":
-          _errorMessage = "Your password is wrong.";
-          break;
-        case "user-not-found":
-          _errorMessage = "User with this email doesn't exist.";
-          break;
-        case "user-disabled":
-          _errorMessage = "User with this email has been disabled.";
-          break;
-        case "too-many-requests":
-          _errorMessage = "Too many requests";
-          break;
-        case "operation-not-allowed":
-          _errorMessage = "Signing in with Email and Password is not enabled.";
-          break;
-        default:
-          _errorMessage = "An undefined Error happened.";
-      }
-      Fluttertoast.showToast(
-        msg: _errorMessage,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+    } catch (e) {
+      message = e.toString();
     }
+    _buildShowTost(message);
+  }
+
+  Future<void> _buildLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 60.0,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 25.0),
+                  Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _postUserToFirestore() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
 
-    UserModel userModel = UserModel();
-    userModel.userId = user!.uid;
-    userModel.email = user.email;
-    userModel.firstName = _firstName.text;
-    userModel.lastName = _lastName.text;
+    UserModel userModel = UserModel(
+      userId: user!.uid,
+      email: user.email,
+      firstName: _firstName.text,
+      lastName: _lastName.text,
+    );
 
-    await firebaseFirestore
+    await _firebaseFirestore
         .collection('tbUser')
         .doc(user.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(
-      msg: "Account created successfully :) ",
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
 
+    _buildLoading();
+    await Future.delayed(const Duration(seconds: 2));
+
+    Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.pushAndRemoveUntil(
       (context),
-      MaterialPageRoute(builder: (context) => const HomePage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
       (route) => true,
     );
   }
@@ -178,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Colors.blue,
                       child: const Text('REGISTER'),
                       onPressed: () {
-                        _register();
+                        _register(_email.text, _password.text);
                       },
                     ),
                   ),

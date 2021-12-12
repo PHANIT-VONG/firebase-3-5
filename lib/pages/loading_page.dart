@@ -29,7 +29,7 @@ class LoadingPage extends StatelessWidget {
                 // Get the user
                 User? _user = streamSnapshot.data as User?;
                 // If the user is null, we're not logged in
-                if (_user != null) {
+                if (_user == null) {
                   // user not logged in, head to login
                   return const LoginPage();
                 } else {
