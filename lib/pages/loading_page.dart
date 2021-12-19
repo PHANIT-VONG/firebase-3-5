@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'package:flutter_firebase_3_5/pages/show_people.dart';
 import 'login_page.dart';
 
 class LoadingPage extends StatelessWidget {
-  LoadingPage({Key? key}) : super(key: key);
+  LoadingPage({Key key}) : super(key: key);
 
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
@@ -27,14 +27,14 @@ class LoadingPage extends StatelessWidget {
               }
               if (streamSnapshot.connectionState == ConnectionState.active) {
                 // Get the user
-                User? _user = streamSnapshot.data as User?;
+                User _user = streamSnapshot.data as User;
                 // If the user is null, we're not logged in
                 if (_user == null) {
                   // user not logged in, head to login
                   return const LoginPage();
                 } else {
                   // The user is logged in, head to homepage
-                  return const HomePage();
+                  return const ShowPeoplPage();
                 }
               }
               // Checking the auth state - Loading

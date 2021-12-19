@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_3_5/pages/register_page.dart';
 import 'package:flutter_firebase_3_5/pages/show_people.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();

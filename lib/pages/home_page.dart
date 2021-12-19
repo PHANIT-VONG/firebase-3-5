@@ -6,14 +6,14 @@ import 'package:flutter_firebase_3_5/models/user_model.dart';
 import 'package:flutter_firebase_3_5/pages/login_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final User? _user = FirebaseAuth.instance.currentUser;
+  final User _user = FirebaseAuth.instance.currentUser;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   UserModel _userModel = UserModel();
   bool _status = false;
@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
   Future<void> _getCurrentUser() async {
     await FirebaseFirestore.instance
         .collection('tbUser')
-        .doc(_user!.uid)
+        .doc(_user.uid)
         .get()
         .then((value) {
-      _userModel = UserModel.fromMap(value.data());
+      _userModel = UserModel.fromMap(value.data);
       setState(() {});
     });
     _status = true;

@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_firebase_3_5">
+    
+    <!--  -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <!--  -->
+
    <application
         android:label="flutter_firebase_3_5"
         android:icon="@mipmap/ic_launcher">

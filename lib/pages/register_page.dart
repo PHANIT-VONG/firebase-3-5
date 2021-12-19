@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_3_5/models/user_model.dart';
-import 'package:flutter_firebase_3_5/pages/home_page.dart';
 import 'package:flutter_firebase_3_5/pages/login_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({Key key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -81,10 +80,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _postUserToFirestore() async {
     FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
+    User user = _auth.currentUser;
 
     UserModel userModel = UserModel(
-      userId: user!.uid,
+      userId: user.uid,
       email: user.email,
       firstName: _firstName.text,
       lastName: _lastName.text,
